@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{{ block.super }}{% endblock %}
+
+{% block sidebar %}
+    {% include 'storage/includes/_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+    {#    обработка сообщений на странице  #}
+    {% if messages %}
+        <ul class="messages" id="messages-list">
+            {% if messages %}
+                {% for message in messages %}
+                    <li>
+                        {% if message.tags %}
+                            <div class="alert alert-{{ message.tags }} msg fade show" role="alert">{{ message }}</div>
+                        {% else %}
+                            <div class="alert alert-info msg fade show" role="alert">{{ message }}</div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    {% endif %}
+    <br>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            {#            <div class="form-control">{{ form.username }}</div>#}
+            {#            {{ form.as_p }}#}
+            <tr>
+                <th>
+                    <label for="id_folder">Выберите папку, куда перенести...</label>
+                </th>
+                <td>
+                    <select class="form-select" name="folder" id="id_folder">
+                        {% for folder in folders %}
+                            {% if folder.pk == folder_id %}
+                                <option value="{{ folder.pk }}" selected>{{ folder.title }}</option>
+                            {% else %}
+                                <option value="{{ folder.pk }}">{{ folder.title }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <th>
+                    <label for="id_title">Введите название файла</label>
+                </th>
+                <td>
+                    <input class="form-control"
+                           type="text"
+                           name="title"
+                           maxlength="128"
+                           value="{{ file.title }}"
+                           id="id_title">
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <th>
+                    <label for="id_description">Введите описание файла</label>
+                </th>
+                <td>
+                    <textarea class="form-control"
+                              name="description"
+                              cols="40"
+                              rows="10"
+                              id="id_description">{{ file.description }}</textarea>
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <th>
+                    <label for="id_hidden">Скрыт?</label>
+                </th>
+                <td>
+                    {% if file.hidden %}
+                        <input type="checkbox" name="hidden" id="id_hidden" checked>
+                    {% else %}
+                        <input type="checkbox" name="hidden" id="id_hidden">
+                    {% endif %}
+                </td>
+            </tr>
+            <br><br>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить файл</button>
+    </form>
+{% endblock %}

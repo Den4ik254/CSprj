@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  db:
+    build:
+      context: ./docker/db
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_PASSWORD=eRQWVo93okHPxEaJ
+    volumes:
+      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/scr/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - web
+      - db
+    ports:
+      - "80:80"
+    volumes:
+      - ./static/:/static
+      - ./media/:/media

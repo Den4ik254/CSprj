@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{{ block.super }}{% endblock %}
+
+{% block sidebar %}
+    {% include 'storage/includes/_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+{#    обработка сообщений на странице  #}
+    {% include 'storage/includes/_messages.html' %}
+
+    <br>
+
+{#    Кнопки добавления файла и создания папки #}
+    {% include 'storage/includes/_buttons/_teacher_buttons.html' %}
+
+{#    отрисовка заголовка страницы #}
+    <label class="title">
+        <h3>{{ title }}</h3>
+        {% if last_specs_files %}
+            <hr>
+            <h6>Последние обновления для ваших дисциплин</h6>
+        {% endif %}
+    </label>
+
+    <hr>
+    <br>
+
+{#    отписовка последних файлов на главной странице #}
+    {% include 'storage/includes/_index/_last_files.html' %}
+
+{#    отрисовка преподавателей дисциплины #}
+    {% include 'storage/includes/_teachers.html' %}
+
+{#    отрисовка папок преподавателя #}
+    {% if folders %}
+        {% include 'storage/includes/_folders.html' %}
+    {% endif %}
+
+{#    отрисовка файлов/подпапок в папке #}
+    {% if files or sub_folders %}
+        <hr>
+        {#    отрисовка подпапок в папке #}
+        <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+            {% if sub_folders %}
+                {% include 'storage/includes/_sub_folders.html' %}
+            {% endif %}
+            {# отрисовка файлов в папке #}
+            {% include 'storage/includes/_files.html' %}
+        </div>
+    {% endif %}
+
+{#    отрисовка информации о файле #}
+    {% if file %}
+        <br>
+        {% include 'storage/includes/_fileinfo.html' %}
+    {% endif %}
+
+    <script>
+        function safetyDelete(href) {
+            location.href = href
+        }
+    </script>
+{% endblock %}

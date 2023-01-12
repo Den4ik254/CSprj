@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{{ block.super }}{% endblock %}
+
+{% block sidebar %}
+    {% include 'storage/includes/_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+{#    обработка сообщений на странице  #}
+    {% if messages %}
+        <ul class="messages" id="messages-list">
+            {% if messages %}
+                {% for message in messages %}
+                    <li>
+                        {% if message.tags %}
+                            <div class="alert alert-{{ message.tags }} msg fade show" role="alert">{{ message }}</div>
+                        {% else %}
+                            <div class="alert alert-info msg fade show" role="alert">{{ message }}</div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    {% endif %}
+    <br>
+    <form method="post" enctype="multipart/form-data">
+        <table>
+            {% csrf_token %}
+            <div class="mb-3">
+    {#            <div class="form-control">{{ form.username }}</div>#}
+    {#            {{ form.as_p }}#}
+                <tr>
+                    <th>
+                        <label for="id_folder">Выберите папку, где создавать...</label>
+                    </th>
+                    <td>
+                        <select class="form-select" name="folder" required id="id_folder">
+                            {% for folder in folders %}
+                                <option value="{{ folder.pk }}">{{ folder.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <br>
+                <tr>
+                    <th>
+                        <label for="id_title">Введите название файла</label>
+                    </th>
+                    <td>
+                        <input class="form-control"
+                               type="text"
+                               name="title"
+                               maxlength="128"
+                               required
+                               id="id_title">
+                    </td>
+                </tr>
+                <br>
+                <tr>
+                    <th>
+                        <label for="id_description">Введите описание файла</label>
+                    </th>
+                    <td>
+                        <textarea class="form-control"
+                                  name="description"
+                                  cols="40"
+                                  rows="10"
+                                  id="id_description"></textarea>
+                    </td>
+                </tr>
+                <br>
+                    <tr>
+                        <th>
+                            <label for="id_file">Выберите файл</label>
+                        </th>
+                        <td>
+                            <input type="file"
+                                   name="file"
+                                   required
+                                   id="id_file">
+                        </td>
+                        <br>
+                        <br>
+                    </tr>
+                    <tr>
+                        <th>
+                            <label for="id_hidden">Скрыт?</label>
+                        </th>
+                        <td>
+                            <input type="checkbox" name="hidden" id="id_hidden" checked>
+                        </td>
+                    </tr>
+                <br><br>
+                    <tr style="visibility: hidden;">
+                        <th>
+                            <label for="id_teacher">Преподаватель</label>
+                        </th>
+                        <td>
+                            <select class="form-select" name="teacher" required id="id_teacher">
+                                <option value="{{ user.pk }}" selected>{{ user.get_transcript }}</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr style="visibility: hidden;">
+                        <th>
+                            <label for="id_speciality">Преподаватель</label>
+                        </th>
+                        <td>
+                            <select class="form-select" name="speciality" required id="id_speciality">
+                                <option value="{{ speciality_id }}" selected>{{ speciality_id }}</option>
+                            </select>
+                        </td>
+                    </tr>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить файл</button>
+        </table>
+    </form>
+{% endblock %}

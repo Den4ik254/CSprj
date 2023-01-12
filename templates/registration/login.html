@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Авторизация{{ block.super }}{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div id="parent">
+                <div id="login">
+                    <input type="text"
+                           placeholder="Логин"
+                           name="username">
+                    <input type="password"
+                           placeholder="Пароль"
+                           name="password">
+                <button id="enter" type="submit" value="login">Войти</button>
+                <input type="hidden" name="next" value="{{ next }}"/>
+                    {% if form.errors %}
+                    <div class="info">
+                        <p>Неверные данные!</p>
+                        {% endif %}
+                        {% if next %}
+                        {% if user.is_authenticated %}
+                        <p>Вы уже авторизованы!</p>
+                        {% else %}
+                        <p>Авторизуйтесь...</p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

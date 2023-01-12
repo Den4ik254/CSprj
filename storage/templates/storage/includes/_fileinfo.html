@@ -1,0 +1,50 @@
+{% load static %}
+
+{% block file_info %}
+    <input type="checkbox" id="nav1-toggle" hidden="" checked>
+    <nav class="nav1">
+        {# <label for="nav1-toggle" class="nav1-toggle" onclick=""></label>#}
+        <h2 class="logo">
+            <a href="//#/">{{ file.title }}</a>
+        </h2>
+        <h5 class="descrip">
+            {{ file.description }}
+        </h5>
+        <ul>
+            {% if user.privilege == '2' and user.pk == teacher_id %}
+                <li>
+                    <a class="btn btn-success" href="{% get_media_prefix %}{{ file.file }}">Скачать</a>
+                </li>
+                <li>
+                    <a class="btn btn-primary"
+                       href="{% url 'edit_file' speciality_id=speciality_id teacher_id=teacher_id folder_id=folder_id file_id=file.pk %}">Изменить</a>
+                </li>
+                <li>
+                    <a href="{% url 'delete_file' speciality_id=speciality_id teacher_id=teacher_id folder_id=folder_id file_id=file.pk %}"
+                       class="btn btn-danger">
+                        Удалить
+                    </a>
+                </li>
+                {% if file.hidden %}
+                    <li>
+                        <a href="{% url 'hide_file' speciality_id=speciality_id teacher_id=teacher_id folder_id=folder_id file_id=file.pk %}"
+                           class="btn btn-success">
+                            Показать
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'hide_file' speciality_id=speciality_id teacher_id=teacher_id folder_id=folder_id file_id=file.pk %}"
+                           class="btn btn-secondary">
+                            Скрыть
+                        </a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li>
+                    <a class="btn btn-success" href="{% get_media_prefix %}{{ file.file }}">Скачать</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}
